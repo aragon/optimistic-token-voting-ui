@@ -7,6 +7,7 @@ import { uploadToIPFS } from '@/utils/ipfs'
 import { useContractWrite } from 'wagmi';
 import { Address, toHex } from 'viem'
 import { TokenVotingAbi } from '@/artifacts/TokenVoting.sol';
+import { OptimisticVotingAbi } from '@/artifacts/OptimisticVoting.sol';
 import { useAlertContext } from '../context/AlertContext';
 import WithdrawalInput from '@/app/containers/withdrawalInput'
 import CustomActionInput from '@/app/containers/customActionInput'
@@ -28,13 +29,13 @@ export default function Create() {
     const [ipfsPin, setIpfsPin] = useState<string>('');
     const [title, setTitle] = useState<string>();
     const [summary, setSummary] = useState<string>();
-    const [action, setAction] = useState<Action[]>([]);
+    const [action, setAction] = useState<Action[] | undefined>([])
     const { addAlert } = useAlertContext()
     const { write: createProposalWrite } = useContractWrite({
-        abi: TokenVotingAbi,
+        abi: OptimisticVotingAbi,
         address: pluginAddress,
         functionName: 'createProposal',
-        args: [toHex(ipfsPin), [action], 0, 0, 0, 0, 0],
+        args: [toHex(ipfsPin), action, 0, 0, 0],
         onSuccess(data) {
             addAlert("We got your proposal!", data.hash)
         },

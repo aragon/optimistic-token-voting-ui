@@ -2,16 +2,34 @@ import { AlertInline, Button } from '@aragon/ods'
 import { Proposal } from '@/utils/types'
 import { formatAddress } from '@/utils/addressHelper';
 import * as dayjs from 'dayjs'
+import { usePublicClient, useAccount, useContractWrite } from 'wagmi';
+import { OptimisticVotingAbi } from '@/artifacts/OptimisticVoting.sol';
+import { useAlertContext, AlertContext, AlertContextProps } from '@/app/context/AlertContext';
+import { Address } from 'viem'
+
+const pluginAddress = ((process.env.NEXT_PUBLIC_PLUGIN_ADDRESS || "") as Address)
 
 interface ProposalHeaderProps {
   proposalNumber: number;
   proposal: Proposal;
-  userVote: number | undefined;
-  userCanVote: boolean;
+  userCanVeto: boolean;
   setShowVotingModal: Function
 }
 
-const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposal, userVote, userCanVote, setShowVotingModal }) => {
+const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposal, userCanVeto, setShowVotingModal }) => {
+  const { addAlert } = useAlertContext() as AlertContextProps
+  const { write: vetoWrite } = useContractWrite({
+    abi: OptimisticVotingAbi,
+    address: pluginAddress,
+    functionName: 'veto',
+    args: [proposalNumber],
+    onSuccess(data) {
+      console.log('Success creating the proposal', data)
+      addAlert("We got your vote!", data.hash)
+    },
+  });
+
+
   const getProposalVariantStatus = (proposal: Proposal) => {
     return {
       variant: proposal?.open ? 'info' : proposal?.executed ? 'success' : proposal?.tally?.no >= proposal?.tally?.yes ? 'critical' : 'success',
@@ -19,15 +37,6 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposa
     }
   }
 
-  const getUserVoteData = () => {
-    if (userVote === 3) {
-      return { variant: 'critical', label: 'Against' }
-    } else if (userVote === 1) {
-      return { variant: 'tertiary', label: 'Abstain' }
-    } else {
-      return { variant: 'success', label: 'For' }
-    }
-  }
 
   return (
     <div className="w-full">
@@ -48,21 +57,22 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposa
           </div>
         </div>
         <div className="flex ">
-          {userCanVote ?
+          {userCanVeto ?
             <Button
               className="flex h-5 items-center"
               size="lg"
               variant="primary"
-              onClick={() => setShowVotingModal(true)}
-            >Vote</Button>
-            : userVote && (
+              onClick={() => vetoWrite()}
+            >Veto</Button>
+            : (
               <div className="flex items-center align-center">
-                <span className="text-lg text-neutral-800 font-semibold pr-4">Voted: </span>
+                <span className="text-lg text-neutral-800 font-semibold pr-4">Vetoed: </span>
                 <Button
                   className="flex h-5 items-center"
                   size="lg"
-                  variant={getUserVoteData().variant}
-                >{getUserVoteData().label}</Button>
+                  disabled
+                  variant={`success`}
+                >Veto</Button>
               </div>
             )}
         </div>

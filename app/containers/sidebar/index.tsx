@@ -15,7 +15,7 @@ const Sidebar = () => {
         <div className="flex-1 grow">
           <div className="w-full flex items-center py-3 px-3 border-b border-neutral-200">
             <Image src="/aragonette-logo.png" width="75" height="200" className="" alt="Aragonette Logo" />
-            <Link href="/" className={`block py-1 leading-tight font-semibold text-xl text-neutral-900`} aria-current="page">Aragonette</Link>
+            <Link href="/" className={`block py-1 leading-tight font-semibold text-xl text-neutral-900`} aria-current="page">Dual Governance</Link>
           </div>
           <ul className="mt-12 px-6">
             <li className={`flex w-full justify-between text-neutral-900 cursor-pointer items-center py-3 px-3 mb-2 ${!segment ? 'bg-neutral-100 font-semibold' : ''} rounded-lg shadow-lg hover:bg-neutral-100`}>

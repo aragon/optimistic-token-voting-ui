@@ -47,7 +47,7 @@ export type Proposal = {
   open: boolean;
   executed: boolean;
   parameters: ProposalParameters;
-  tally: Tally;
+  vetoTally: bigint;
   actions: Action[];
   allowFailureMap: bigint;
   title: string;

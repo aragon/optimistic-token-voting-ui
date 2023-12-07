@@ -14,7 +14,6 @@ export default function Proposals() {
   const [numProposals, setNumProposals] = useState<number>();
   const canCreate = useCanCreateProposal();
 
-  console.log("canCreate", canCreate);
 
   const { isLoading } = useContractRead({
     address: pluginAddress,

@@ -1,19 +1,21 @@
 import * as dayjs from 'dayjs'
+import { formatUnits } from 'viem'
+
 
 interface ProposalDetailsProps {
-  supportThreshold: number;
+  vetoTally: bigint;
   endDate: bigint;
   snapshotBlock: bigint;
 }
 
-const ProposalDetails: React.FC<ProposalDetailsProps> = ({ supportThreshold, endDate, snapshotBlock }) => {
+const ProposalDetails: React.FC<ProposalDetailsProps> = ({ vetoTally, endDate, snapshotBlock }) => {
 
   return (
     <>
       <div className="flex space-between border border-neutral-300 rounded-2xl py-5 px-3">
-        <h2 className="text-xl flex-grow font-semibold text-neutral-600 pr-6">Thresshold</h2>
+        <h2 className="text-xl flex-grow font-semibold text-neutral-600 pr-6">Veto Tally</h2>
         <div className="items-right text-right flex-wrap">
-          <span className="text-xl font-semibold">{supportThreshold}</span>
+          <span className="text-xl font-semibold">{formatUnits(vetoTally || BigInt(0), 18)}</span>
           <p className="text-neutral-600">voting power</p>
         </div>
       </div>
@@ -28,7 +30,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ supportThreshold, end
         <h2 className="text-xl flex-grow font-semibold text-neutral-600 pr-6">Snapshot</h2>
         <div className="items-right text-right flex-wrap">
           <p className="text-neutral-600">Taken at block</p>
-          <span className="text-xl mr-2 font-semibold">{snapshotBlock.toLocaleString()}</span>
+          <span className="text-xl mr-2 font-semibold">{snapshotBlock?.toLocaleString()}</span>
         </div>
       </div>
     </>
