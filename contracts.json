@@ -1,0 +1,11 @@
+{
+    "goerli": {
+        "dao": "0x878412b63B03Bf6f2D797D6D1c0f5A2912F3e88E",
+        "OptimisticTokenVotingPlugin": "0xE28D2666CCb5A0cE3B7B3Aaf31D6B105bDb72c59",
+        "token": "0x0D5A3C79a3D71F0829dD0d9E8F500d762D669184",
+        "OptimisticTokenVotingPluginSetup": "0x4191f057a1C443a13D5Fd2b749cE9A1127567eB9",
+        "GovernanceERC20": "0x167c3c2050b979ebfb5feac478309faac0fdfe50",
+        "GovernanceWrappedERC20": "0x23Ecd9BdeEE8B7493154EA25f684B6A9eB465866",
+        "PluginRepo": "0x539568130F6c991d834bD29Ebae3E8264EfA79B9"
+    }
+}
