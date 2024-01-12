@@ -68,10 +68,10 @@ export default function ProposalDescription(proposal: Proposal) {
         Actions
       </h2>
       <div className="flex flex-row space-between">
-        <IfNot condition={proposal.actions.length}>
+        <IfNot condition={proposal?.actions?.length}>
           <p className="pt-2">The proposal has no actions</p>
         </IfNot>
-        <If condition={proposal.actions.length && !decodedActions?.length}>
+        <If condition={proposal?.actions?.length && !decodedActions?.length}>
           <PleaseWaitSpinner />
         </If>
         {decodedActions?.map?.((action, i) => (
@@ -83,7 +83,7 @@ export default function ProposalDescription(proposal: Proposal) {
 }
 
 // This should be encapsulated as soon as ODS exports this widget
-const Card = function ({ children }: { children: ReactNode }) {
+const Card = function({ children }: { children: ReactNode }) {
   return (
     <div
       className="p-4 lg:p-6 w-full flex flex-col space-y-6
@@ -96,7 +96,7 @@ const Card = function ({ children }: { children: ReactNode }) {
   );
 };
 
-const ActionCard = function ({
+const ActionCard = function({
   action,
   idx,
 }: {

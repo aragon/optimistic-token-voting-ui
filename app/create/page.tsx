@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { uploadToIPFS } from '@/utils/ipfs'
 import { useContractWrite } from 'wagmi';
 import { Address, toHex } from 'viem'
-import { TokenVotingAbi } from '@/artifacts/TokenVoting.sol';
+import { OptimisticTokenVotingPluginAbi } from '@/artifacts/OptimisticTokenVotingPlugin.sol';
 import { useAlertContext } from '../context/AlertContext';
 import WithdrawalInput from '@/app/containers/withdrawalInput'
 import CustomActionInput from '@/app/containers/customActionInput'
@@ -14,7 +14,7 @@ import { Action } from '@/utils/types'
 
 const ipfsEndpoint = process.env.NEXT_PUBLIC_IPFS_ENDPOINT || "";
 const ipfsKey = process.env.NEXT_PUBLIC_IPFS_API_KEY || "";
-const pluginAddress = ((process.env.NEXT_PUBLIC_PLUGIN_ADDRESS || "") as Address)
+const pluginAddress = (process.env.NEXT_PUBLIC_PLUGIN_ADDRESS || "") as Address
 
 const auth = ipfsKey; // Replace YOUR_API_KEY with your actual API key
 
@@ -31,10 +31,10 @@ export default function Create() {
     const [action, setAction] = useState<Action[]>([]);
     const { addAlert } = useAlertContext()
     const { write: createProposalWrite } = useContractWrite({
-        abi: TokenVotingAbi,
+        abi: OptimisticTokenVotingPluginAbi,
         address: pluginAddress,
         functionName: 'createProposal',
-        args: [toHex(ipfsPin), [action], 0, 0, 0, 0, 0],
+        args: [toHex(ipfsPin), action, BigInt(0), BigInt(0), BigInt(0)],
         onSuccess(data) {
             addAlert("We got your proposal!", data.hash)
         },
@@ -47,7 +47,6 @@ export default function Create() {
     });
 
     useEffect(() => {
-        console.log("Contract proposal thingy: ", action)
         if (ipfsPin !== '') createProposalWrite?.()
     }, [ipfsPin])
 

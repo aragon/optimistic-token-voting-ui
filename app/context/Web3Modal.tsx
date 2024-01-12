@@ -3,7 +3,7 @@
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 // import { WagmiConfig } from "wagmi";
 import { createConfig, configureChains } from "wagmi";
-import { mainnet, polygon, optimism } from "@wagmi/core/chains";
+import { goerli } from "@wagmi/core/chains";
 // import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
@@ -23,7 +23,7 @@ const metadata = {
 };
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon],
+  [goerli],
   [alchemyProvider({ apiKey: alchemyKey })]
 );
 

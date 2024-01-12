@@ -2,7 +2,7 @@ import { Address } from 'viem'
 // import { Proposal } from '@/utils/types'
 import { useState, useEffect } from 'react'
 import { useContractReads, useBalance, useAccount } from 'wagmi';
-import { TokenVotingAbi } from '../artifacts/TokenVoting.sol';
+import { OptimisticTokenVotingPluginAbi } from '../artifacts/OptimisticTokenVotingPlugin.sol';
 
 
 const pluginAddress = ((process.env.NEXT_PUBLIC_PLUGIN_ADDRESS || "") as Address)
@@ -12,18 +12,18 @@ export function useCanCreateProposal() {
     const [minProposerVotingPower, setMinProposerVotingPower] = useState<bigint>();
     const [votingToken, setVotingToken] = useState<Address>();
     const { address, isConnecting, isDisconnected } = useAccount()
-    const {data: balance} = useBalance({ address, token: votingToken, })
+    const { data: balance } = useBalance({ address, token: votingToken, })
 
     const { data: contractReads, isError, isLoading } = useContractReads({
         contracts: [
             {
                 address: pluginAddress,
-                abi: TokenVotingAbi,
+                abi: OptimisticTokenVotingPluginAbi,
                 functionName: 'minProposerVotingPower',
             },
             {
                 address: pluginAddress,
-                abi: TokenVotingAbi,
+                abi: OptimisticTokenVotingPluginAbi,
                 functionName: 'getVotingToken',
             }
         ]
@@ -38,7 +38,8 @@ export function useCanCreateProposal() {
     }, [contractReads])
 
     useEffect(() => {
-        if ( balance && minProposerVotingPower && balance?.value >= minProposerVotingPower) setIsCreator(true)
+        if (minProposerVotingPower === BigInt(0)) setIsCreator(true)
+        if (balance && minProposerVotingPower && balance?.value >= minProposerVotingPower) setIsCreator(true)
     }, [balance])
 
     return isCreator

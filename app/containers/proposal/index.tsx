@@ -16,20 +16,8 @@ type ProposalInputs = {
 
 const getProposalVariantStatus = (proposal: Proposal) => {
   return {
-    variant: proposal?.open
-      ? "secondary"
-      : proposal?.executed
-      ? "success"
-      : proposal?.tally?.no >= proposal?.tally?.yes
-      ? "critical"
-      : "success",
-    label: proposal?.open
-      ? "Open"
-      : proposal?.executed
-      ? "Executed"
-      : proposal?.tally!.no >= proposal?.tally!.yes
-      ? "Defeated"
-      : "Executable",
+    variant: proposal?.parameters?.minVetoVotingPower > proposal.vetoTally ? "primary" : "critical",
+    label: proposal?.parameters?.minVetoVotingPower > proposal.vetoTally ? "Live" : "Vetoed"
   };
 };
 
@@ -59,16 +47,13 @@ export default function Proposal(props: ProposalInputs) {
             </p>
           </div>
 
-          <div className="md:w-5/12 lg:w-1/4 xl:1/5">
-            {proposal.tally && (
-              <Button
-                className="w-full"
-                size="sm"
-                variant={getProposalVariantStatus(proposal as Proposal).variant}
-              >
-                {getProposalVariantStatus(proposal as Proposal).label}
-              </Button>
-            )}
+          <div className="">
+            <Button
+              size="sm"
+              variant={getProposalVariantStatus(proposal as Proposal).variant}
+            >
+              {getProposalVariantStatus(proposal as Proposal).label}
+            </Button>
           </div>
         </Link>
       </Card>
@@ -77,7 +62,7 @@ export default function Proposal(props: ProposalInputs) {
 }
 
 // This should be encapsulated as soon as ODS exports this widget
-const Card = function ({ children }: { children: ReactNode }) {
+const Card = function({ children }: { children: ReactNode }) {
   return (
     <div
       className="w-full flex flex-col space-y-6 shadow-lg

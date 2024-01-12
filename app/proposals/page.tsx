@@ -4,7 +4,7 @@ import { useContractRead } from "wagmi";
 import { ReactNode, useState } from "react";
 import Proposal from "../containers/proposal";
 import { Address } from "viem";
-import { TokenVotingAbi } from "../../artifacts/TokenVoting.sol";
+import { OptimisticTokenVotingPluginAbi } from "../../artifacts/OptimisticTokenVotingPlugin.sol";
 import { Button, IconType } from "@aragon/ods";
 import { useCanCreateProposal } from "@/hooks/useCanCreateProposal";
 import Link from "next/link";
@@ -18,7 +18,7 @@ export default function Proposals() {
 
   const { isLoading } = useContractRead({
     address: pluginAddress,
-    abi: TokenVotingAbi,
+    abi: OptimisticTokenVotingPluginAbi,
     functionName: "proposalCount",
     // watch: true,
     onSuccess(data) {

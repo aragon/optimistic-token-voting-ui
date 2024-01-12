@@ -30,11 +30,10 @@ enum VotingMode {
 
 export type ProposalParameters = {
   votingMode: VotingMode;
-  supportThreshold: number;
+  minVetoVotingPower: bigint;
   startDate: bigint;
   endDate: bigint;
   snapshotBlock: bigint;
-  minVotingPower: bigint;
 }
 
 export type Tally = {
@@ -47,7 +46,7 @@ export type Proposal = {
   open: boolean;
   executed: boolean;
   parameters: ProposalParameters;
-  tally: Tally;
+  vetoTally: bigint;
   actions: Action[];
   allowFailureMap: bigint;
   title: string;

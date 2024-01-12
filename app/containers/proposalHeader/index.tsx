@@ -6,12 +6,12 @@ import * as dayjs from 'dayjs'
 interface ProposalHeaderProps {
   proposalNumber: number;
   proposal: Proposal;
-  userVote: number | undefined;
-  userCanVote: boolean;
-  setShowVotingModal: Function
+  userHasVetoed: boolean | undefined;
+  userCanVeto: boolean;
+  vetoWrite: Function
 }
 
-const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposal, userVote, userCanVote, setShowVotingModal }) => {
+const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposal, userHasVetoed, userCanVeto, vetoWrite }) => {
   const getProposalVariantStatus = (proposal: Proposal) => {
     return {
       variant: proposal?.open ? 'info' : proposal?.executed ? 'success' : proposal?.tally?.no >= proposal?.tally?.yes ? 'critical' : 'success',
@@ -19,13 +19,11 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposa
     }
   }
 
-  const getUserVoteData = () => {
-    if (userVote === 3) {
+  const getUserVetoData = () => {
+    if (userHasVetoed) {
       return { variant: 'critical', label: 'Against' }
-    } else if (userVote === 1) {
-      return { variant: 'tertiary', label: 'Abstain' }
     } else {
-      return { variant: 'success', label: 'For' }
+      return { variant: 'tertiary', label: 'Veto' }
     }
   }
 
@@ -48,21 +46,21 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposalNumber, proposa
           </div>
         </div>
         <div className="flex ">
-          {userCanVote ?
+          {userCanVeto ?
             <Button
               className="flex h-5 items-center"
               size="lg"
               variant="primary"
-              onClick={() => setShowVotingModal(true)}
-            >Vote</Button>
-            : userVote && (
+              onClick={() => vetoWrite?.()}
+            >Veto</Button>
+            : (
               <div className="flex items-center align-center">
                 <span className="text-lg text-neutral-800 font-semibold pr-4">Voted: </span>
                 <Button
                   className="flex h-5 items-center"
                   size="lg"
-                  variant={getUserVoteData().variant}
-                >{getUserVoteData().label}</Button>
+                  variant={getUserVetoData().variant}
+                >{getUserVetoData().label}</Button>
               </div>
             )}
         </div>
